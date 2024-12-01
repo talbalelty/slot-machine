@@ -1,4 +1,4 @@
-# Moon Active Back End Engineer Exam
+# Slot Machine
 ## Description
 
 This is simple slot machine application made with NestJs and Redis DB using microservice architecture.
