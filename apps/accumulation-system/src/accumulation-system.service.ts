@@ -119,12 +119,11 @@ export class AccumulationSystemService {
      * so the user cannot spin again until the current spin is completed.
      * 
      * @param {UserAccumulation} userAccumulation - The user's accumulation data which includes the spin in process flag and the number of spins.
-     * @returns {UserAccumulation} - The updated user accumulation data.
      * 
      * @throws {SpinInProcessException} - If the user is currently in the process of spinning.
      * @throws {NoSpinsException} - If the user has no spins left.
      */
-    private async isAllowedToSpin(userAccumulation: UserAccumulation): Promise<UserAccumulation> {
+    private async isAllowedToSpin(userAccumulation: UserAccumulation): Promise<void> {
         if (userAccumulation.spinInProcess === 1) {
             throw new SpinInProcessException();
         }
@@ -135,7 +134,6 @@ export class AccumulationSystemService {
         userAccumulation.spinInProcess = 1; // true
         await this.redisClientService.set(`${USER_ACCUMULATION_INDEX}:${userAccumulation.userId}`, `$`, userAccumulation);
         this.logger.log(`User ${userAccumulation.userId} is allowed to spin.`);
-        return userAccumulation;
     }
 
     private async searchUserAccumulation(userId: string): Promise<UserAccumulation> {

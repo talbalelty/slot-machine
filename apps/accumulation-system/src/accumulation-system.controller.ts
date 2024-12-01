@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 import { AccumulationSystemService } from './accumulation-system.service';
 import { SpinResultsDto } from '../../../libs/dto/src/index';
+import { NoSpinsException } from './exceptions';
 
 @Controller({
     version: '1',
