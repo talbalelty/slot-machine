@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test-slot:e2e": "jest --config ./apps/slot-machine/test/jest-e2e.json",
-    "test-acc:e2e": "jest --config ./apps/accumulation-system/test/jest-e2e.json"
+    "test-accu:e2e": "jest --config ./apps/accumulation-system/test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/axios": "^3.1.2",

@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnApplicationBootstrap, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, RedisClientType } from 'redis';
 import { USER_ACCUMULATION_INDEX, userAccumulationSchema } from '../models/user-accumulation.model';

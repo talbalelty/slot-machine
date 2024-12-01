@@ -1,18 +1,28 @@
 import { readFileSync } from 'fs';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { RedisClientService } from './database/redis-client.service';
 import { SpinResultsDto } from '@app/dto/spin-results.dto';
 import { USER_ACCUMULATION_INDEX, UserAccumulation } from './models/user-accumulation.model';
 import { SpinInProcessException, NoSpinsException } from './exceptions';
 import { Missions, Reward } from './models/missions.model';
+import { validate } from 'class-validator';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
-export class AccumulationSystemService {
-    private readonly MISSIONS: Missions = JSON.parse(readFileSync('apps/accumulation-system/src/configurations/missions.json', 'utf8'));
-
+export class AccumulationSystemService implements OnApplicationBootstrap {
+    private MISSIONS: Missions;
     private readonly logger = new Logger(AccumulationSystemService.name);
 
     constructor(private readonly redisClientService: RedisClientService) { }
+
+    async onApplicationBootstrap() {
+        this.MISSIONS = plainToClass(Missions, JSON.parse(readFileSync('apps/accumulation-system/src/configurations/missions.json', 'utf8')));
+        const validationErrors = await validate(this.MISSIONS);
+        if (validationErrors.length > 0) {
+            this.logger.error(`Missions configuration is invalid: ${validationErrors}`);
+            throw new Error('Missions configuration is invalid');
+        }
+    }
 
     /**
      * Processes the results of a spin operation for a user.
@@ -58,6 +68,7 @@ export class AccumulationSystemService {
     private async updateUserAccumulation(userAccumulation: UserAccumulation): Promise<void> {
         userAccumulation.spinInProcess = 0; // false
         await this.redisClientService.set(`${USER_ACCUMULATION_INDEX}:${userAccumulation.userId}`, `$`, userAccumulation);
+        this.logger.log(`User ${userAccumulation.userId} has completed the spin.`);
     }
 
     /**

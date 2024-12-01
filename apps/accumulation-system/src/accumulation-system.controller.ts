@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 import { AccumulationSystemService } from './accumulation-system.service';
 import { SpinResultsDto } from '../../../libs/dto/src/index';
-import { NoSpinsException } from './exceptions';
 
 @Controller({
     version: '1',
@@ -19,6 +18,8 @@ export class AccumulationSystemController {
     @Post('spin-results')
     async spinResults(@Body() spinResultsDto: SpinResultsDto): Promise<any> {
         this.logger.log(`Received spin results ${JSON.stringify(spinResultsDto)}`);
-        return await this.accumulationSystemService.spinResults(spinResultsDto);
+        const res = await this.accumulationSystemService.spinResults(spinResultsDto);
+        this.logger.log(`Sending spin response ${JSON.stringify(res)}`);
+        return res;
     }
 }
