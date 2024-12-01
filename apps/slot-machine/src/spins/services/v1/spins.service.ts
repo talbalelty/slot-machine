@@ -37,7 +37,6 @@ export class SpinsService {
     }
 
     private rollNumbers(): number[] {
-        // TODO - implement rolling numbers
-        return [7, 7, 7];
+        return [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)];
     }
 }
